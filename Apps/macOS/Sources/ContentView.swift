@@ -5,6 +5,7 @@ struct ContentView: View {
         HStack(alignment: .center, content: {
             Image(nsImage: BigvalutMacosAsset.MacOS.hget.image)
             Text(BigvalutMacosStrings.Localizable.hello)
+                .foregroundColor(Color(BigvalutMacosAsset.Colors.customGray.color))
         })
     }
 }
