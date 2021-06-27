@@ -1,13 +1,17 @@
 import ProjectDescription // <1>
 
+let projectName = "Bigvalut"
+let bundleIdIOS = "com.bigears.kovalut-ru"
+let bundleIdMacOS = "com.bigears.kovalut-ru-mac-os"
+
 let project = Project(
-    name: "Bigvalut",
+    name: projectName,
     targets: [
         Target(
-            name: "Bigvalut_iOS",
+            name: projectName + "_iOS",
             platform: .iOS,
             product: .app,
-            bundleId: "com.bigears.kovalut-ru",
+            bundleId: bundleIdIOS,
             infoPlist: .file(path: .init("iOS/Info.plist")),
             sources: [
                 "iOS/Sources/**",
@@ -19,10 +23,10 @@ let project = Project(
             ]
         ),
         Target(
-            name: "Bigvalut_macOS",
+            name: projectName + "_macOS",
             platform: .macOS,
             product: .app,
-            bundleId: "com.bigears.kovalut-ru-mac-os",
+            bundleId: bundleIdMacOS,
             infoPlist: .file(path: .init("macOS/Info.plist")),
             sources: [
                 "macOS/Sources/**",
