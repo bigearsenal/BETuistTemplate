@@ -5,6 +5,7 @@ struct ContentView: View {
         HStack(alignment: .center, content: {
             Image(uiImage: BigvalutIosAsset.Ios.orca.image).resizable().frame(width: 50, height: 50, alignment: .center)
             Text(BigvalutIosStrings.Localizable.hello)
+                .foregroundColor(Color(BigvalutIosAsset.Colors.customGray.color))
         })
     }
 }
