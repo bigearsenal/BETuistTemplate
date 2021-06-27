@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Text(BigvalutMacosStrings.Localizable.next)
+        Text(BigvalutMacosStrings.Localizable.hello)
     }
 }
 
