@@ -2,7 +2,10 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Text(BigvalutMacosStrings.Localizable.hello)
+        HStack(alignment: .center, content: {
+            Image(nsImage: BigvalutMacosAsset.MacOS.hget.image)
+            Text(BigvalutMacosStrings.Localizable.hello)
+        })
     }
 }
 
