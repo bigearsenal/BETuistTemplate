@@ -2,8 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Image("HGET")
-            .padding()
+        Text(BigvalutMacosStrings.Localizable.hello)
     }
 }
 
