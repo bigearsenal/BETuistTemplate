@@ -1,21 +1,15 @@
 import ProjectDescription // <1>
 
 let projectName = "Bigvalut"
-let bundleIdIOS = "com.bigears.kovalut-ru"
-let bundleIdMacOS = "com.bigears.kovalut-ru-mac-os"
+let bundleIdMacOS = "com.bigears.kovalut-ru"
 let kitName = projectName + "Kit"
-let uikitName = projectName + "UIKit"
-
-let iOSTargets = makeKitFrameworkTargets(platform: .iOS) +
-    makeUIKitFrameworkTargets() +
-    createAppTarget(platform: .iOS, bundleId: bundleIdIOS)
 
 let macOSTargets = makeKitFrameworkTargets(platform: .macOS) +
     createAppTarget(platform: .macOS, bundleId: bundleIdMacOS)
 
 let project = Project(
     name: projectName,
-    targets: iOSTargets + macOSTargets
+    targets: macOSTargets
 )
 
 private func createAppTarget(
@@ -24,7 +18,7 @@ private func createAppTarget(
 ) -> [Target] {
     let name = projectName + "_" + platform.rawValue
     let platformDir = "Apps/" + platform.rawValue
-    let sharedDir = "Apps/shared"
+    
     return [
         Target(
             name: name,
@@ -33,12 +27,10 @@ private func createAppTarget(
             bundleId: bundleId,
             infoPlist: .file(path: .init(platformDir + "/Info.plist")),
             sources: [
-                "\(platformDir)/Sources/**",
-                "\(sharedDir)/Sources/**"
+                "\(platformDir)/Sources/**"
             ],
             resources: [
-                "\(platformDir)/Resources/**",
-                "\(sharedDir)/Resources/**"
+                "\(platformDir)/Resources/**"
             ],
             dependencies: [
                 .target(name: kitName + "_" + platform.rawValue)
@@ -61,7 +53,7 @@ private func createAppTarget(
 
 /// Helper function to create a framework target and an associated unit test target
 private func makeKitFrameworkTargets(platform: Platform) -> [Target] {
-    let kitBundleId = bundleIdIOS + "Kit" + "-" + platform.rawValue
+    let kitBundleId = bundleIdMacOS + "Kit" + "-" + platform.rawValue
     let name = kitName + "_" + platform.rawValue
     
     let sources = Target(
@@ -84,35 +76,6 @@ private func makeKitFrameworkTargets(platform: Platform) -> [Target] {
         resources: [],
         dependencies: [
             .target(name: name)
-        ]
-    )
-    return [sources, tests]
-}
-
-/// Helper function to create a framework target and an associated unit test target
-private func makeUIKitFrameworkTargets() -> [Target] {
-    let uikitBundleId = bundleIdIOS + "UIKit"
-    
-    let sources = Target(
-        name: uikitName,
-        platform: .iOS,
-        product: .framework,
-        bundleId: uikitBundleId,
-        infoPlist: .default,
-        sources: ["UIKit/Sources/**"],
-        resources: [],
-        dependencies: []
-    )
-    let tests = Target(
-        name: "\(uikitName)Tests",
-        platform: .iOS,
-        product: .unitTests,
-        bundleId: uikitBundleId + "Tests",
-        infoPlist: .default,
-        sources: ["UIKit/Tests/**"],
-        resources: [],
-        dependencies: [
-            .target(name: uikitName)
         ]
     )
     return [sources, tests]
