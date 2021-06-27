@@ -3,7 +3,7 @@ A template for creating Xcode project using tuist
 
 ## Create project
 - Download and install `tuist`
-- There are 2 branches for choosing if you are developing for just `ios` or `macos` platform, they are `macos_only` and `ios_only`. If you are developing universal app for both `ios` and `macos`, use branch `master`
+- There are 2 branches to choose if you are developing for just `ios` or `macos` platform, they are `macos_only` and `ios_only`. If you are developing universal app for both `ios` and `macos`, use branch `master`
 - After choosing branch and download, navigate to folder and run `tuist generate`
 
 ## Project structure
