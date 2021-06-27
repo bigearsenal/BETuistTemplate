@@ -5,16 +5,23 @@ let bundleIdMacOS = "com.bigears.kovalut-ru"
 let kitName = projectName + "Kit"
 
 let macOSTargets = makeKitFrameworkTargets(platform: .macOS) +
-    createAppTarget(platform: .macOS, bundleId: bundleIdMacOS)
+    createAppTarget(platform: .macOS, bundleId: bundleIdMacOS, spm: ["Kingfisher"])
 
 let project = Project(
     name: projectName,
+    packages: [
+        .remote(
+            url: "https://github.com/onevcat/Kingfisher.git",
+            requirement: .upToNextMajor(from: "6.0.0")
+        )
+    ],
     targets: macOSTargets
 )
 
 private func createAppTarget(
     platform: Platform,
-    bundleId: String
+    bundleId: String,
+    spm: [String] = []
 ) -> [Target] {
     let name = projectName + "_" + platform.rawValue
     let platformDir = "Apps/" + platform.rawValue
@@ -32,9 +39,8 @@ private func createAppTarget(
             resources: [
                 "\(platformDir)/Resources/**"
             ],
-            dependencies: [
-                .target(name: kitName + "_" + platform.rawValue)
-            ]
+            dependencies: [.target(name: kitName + "_" + platform.rawValue)]
+                + spm.map {TargetDependency.package(product: $0) }
         ),
         Target(
             name: name + "Tests",
@@ -47,7 +53,7 @@ private func createAppTarget(
             ],
             dependencies: [
                 .target(name: "\(name)")
-        ])
+            ])
     ]
 }
 
