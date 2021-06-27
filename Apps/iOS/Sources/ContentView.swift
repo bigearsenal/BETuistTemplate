@@ -2,7 +2,10 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Text(BigvalutIosStrings.Localizable.hello)
+        HStack(alignment: .center, content: {
+            Image(uiImage: BigvalutIosAsset.Ios.orca.image).resizable().frame(width: 50, height: 50, alignment: .center)
+            Text(BigvalutIosStrings.Localizable.hello)
+        })
     }
 }
 
