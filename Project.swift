@@ -3,39 +3,117 @@ import ProjectDescription // <1>
 let projectName = "Bigvalut"
 let bundleIdIOS = "com.bigears.kovalut-ru"
 let bundleIdMacOS = "com.bigears.kovalut-ru-mac-os"
+let kitName = projectName + "Kit"
+let uikitName = projectName + "UIKit"
+
+let iOSTargets = makeKitFrameworkTargets(platform: .iOS) +
+    makeUIKitFrameworkTargets() +
+    createAppTarget(platform: .iOS, bundleId: bundleIdIOS)
+
+let macOSTargets = makeKitFrameworkTargets(platform: .macOS) +
+    createAppTarget(platform: .macOS, bundleId: bundleIdMacOS)
 
 let project = Project(
     name: projectName,
-    targets: [
+    targets: iOSTargets + macOSTargets
+)
+
+private func createAppTarget(
+    platform: Platform,
+    bundleId: String
+) -> [Target] {
+    let name = projectName + "_" + platform.rawValue
+    let platformDir = "Apps/" + platform.rawValue
+    let sharedDir = "Apps/shared"
+    return [
         Target(
-            name: projectName + "_iOS",
-            platform: .iOS,
+            name: name,
+            platform: platform,
             product: .app,
-            bundleId: bundleIdIOS,
-            infoPlist: .file(path: .init("iOS/Info.plist")),
+            bundleId: bundleId,
+            infoPlist: .file(path: .init(platformDir + "/Info.plist")),
             sources: [
-                "iOS/Sources/**",
-                "shared/Sources/**"
+                "\(platformDir)/Sources/**",
+                "\(sharedDir)/Sources/**"
             ],
             resources: [
-                "iOS/Resources/**",
-                "shared/Resources/**"
+                "\(platformDir)/Resources/**",
+                "\(sharedDir)/Resources/**"
+            ],
+            dependencies: [
+                .target(name: kitName + "_" + platform.rawValue)
             ]
         ),
         Target(
-            name: projectName + "_macOS",
-            platform: .macOS,
-            product: .app,
-            bundleId: bundleIdMacOS,
-            infoPlist: .file(path: .init("macOS/Info.plist")),
+            name: name + "Tests",
+            platform: platform,
+            product: .unitTests,
+            bundleId: bundleId + "Tests",
+            infoPlist: .default,
             sources: [
-                "macOS/Sources/**",
-                "shared/Sources/**"
+                "\(platformDir)/Tests/**"
             ],
-            resources: [
-                "macOS/Resources/**",
-                "shared/Resources/**"
-            ]
-        )
+            dependencies: [
+                .target(name: "\(name)")
+        ])
     ]
-)
+}
+
+/// Helper function to create a framework target and an associated unit test target
+private func makeKitFrameworkTargets(platform: Platform) -> [Target] {
+    let kitBundleId = bundleIdIOS + "Kit" + "-" + platform.rawValue
+    let name = kitName + "_" + platform.rawValue
+    
+    let sources = Target(
+        name: name,
+        platform: platform,
+        product: .framework,
+        bundleId: kitBundleId,
+        infoPlist: .default,
+        sources: ["Kit/Sources/**"],
+        resources: [],
+        dependencies: []
+    )
+    let tests = Target(
+        name: "\(name)Tests",
+        platform: platform,
+        product: .unitTests,
+        bundleId: kitBundleId + "Tests",
+        infoPlist: .default,
+        sources: ["Kit/Tests/**"],
+        resources: [],
+        dependencies: [
+            .target(name: name)
+        ]
+    )
+    return [sources, tests]
+}
+
+/// Helper function to create a framework target and an associated unit test target
+private func makeUIKitFrameworkTargets() -> [Target] {
+    let uikitBundleId = bundleIdIOS + "UIKit"
+    
+    let sources = Target(
+        name: uikitName,
+        platform: .iOS,
+        product: .framework,
+        bundleId: uikitBundleId,
+        infoPlist: .default,
+        sources: ["UIKit/Sources/**"],
+        resources: [],
+        dependencies: []
+    )
+    let tests = Target(
+        name: "\(uikitName)Tests",
+        platform: .iOS,
+        product: .unitTests,
+        bundleId: uikitBundleId + "Tests",
+        infoPlist: .default,
+        sources: ["UIKit/Tests/**"],
+        resources: [],
+        dependencies: [
+            .target(name: uikitName)
+        ]
+    )
+    return [sources, tests]
+}
