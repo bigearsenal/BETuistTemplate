@@ -3,9 +3,9 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         HStack(alignment: .center, content: {
-            Image(nsImage: BigvalutMacosAsset.MacOS.hget.image)
-            Text(BigvalutMacosStrings.Localizable.hello)
-                .foregroundColor(Color(BigvalutMacosAsset.Colors.customGray.color))
+            Image(nsImage: Asset.MacOS.hget.image)
+            Text(Strings.hello)
+                .foregroundColor(Color(Asset.Colors.customGray.color))
         })
     }
 }
